@@ -100,6 +100,34 @@ function addChatItem(color, data, text, summarize) {
 }
 
 /**
+ * Add a new Mabr to the chat container
+ */
+function addMabarItem(img,user,team,summarize) {
+    let container = location.href.includes('obs.html') ? $('.eventcontainer') : $('.mabarcontainer');
+
+    if (container.find('div').length > 500) {
+        container.find('div').slice(0, 200).remove();
+    }
+
+    container.find('.temporary').remove();;
+
+    container.append(`
+        <div class=${summarize ? 'temporary' : 'static'}>
+            <img class="miniprofilepicture" src="${img}">
+            <span class="name">
+                <b>${user}:</b> 
+                <b>Team: ${sanitize(team)}</b>
+            </span>
+        </div>
+    `);
+
+    container.stop();
+    container.animate({
+        scrollTop: container[0].scrollHeight
+    }, 400);
+}
+
+/**
  * Add a new gift to the gift container
  */
 function addGiftItem(data) {
@@ -191,7 +219,47 @@ connection.on('chat', (msg) => {
     if (window.settings.showChats === "0") return;
 
     addChatItem('', msg, msg.comment);
+
+    let team;
+    let chat = `${msg.comment}`;
+
+    console.log(chat);
+
+    if (chat) {
+        team = chat.toLowerCase().split("!mabar/").pop();
+    }
+
+    let img = `${msg.profilePictureUrl}`;
+    let user = `${msg.uniqueId}`;
+
+    if (msg.comment.toLowerCase().includes('!mabar/') ) {
+        addMabarItem(img,user,team);
+        
+    }
 })
+
+// new list mabar
+
+// connection.on('mabar', (msg) => {
+//     if (window.settings.showChats === "0") return;
+
+//     let team;
+//     let chat = `${msg.comment}`;
+
+//     if (chat) {
+//         team = chat.toLowerCase().split("!mabar/").pop();
+//     }
+
+//     let img = `${msg.profilePictureUrl}`;
+//     let user = `${msg.uniqueId}`;
+
+//     if (msg.comment.toLowerCase().includes('!mabar/') ) {
+//         addMabarItem(img,user,team);
+        
+//     }
+
+//     //addChatItem('', msg, msg.comment);
+// })
 
 // New gift received
 connection.on('gift', (data) => {

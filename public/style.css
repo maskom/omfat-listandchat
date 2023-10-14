@@ -53,7 +53,7 @@ a {
     text-align: center;
 }
 
-.chatcontainer, .giftcontainer, .eventcontainer {
+.chatcontainer, .giftcontainer, .eventcontainer, .mabarcontainer {
     overflow-y: scroll;
     height: calc(100vh - 240px);
     word-wrap: break-word;
@@ -66,6 +66,29 @@ a {
 .chatcontainer {
     min-width: 400px;
     max-width: calc(100vw - 430px);
+}
+
+.mabarcontainer {
+    min-width: 400px;
+    max-width: calc(100vw - 430px);
+}
+
+.mabarcontainer .static {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    margin-bottom: 10px;
+}
+
+.mabarcontainer .miniprofilepicture {
+    height: 60px;
+    width: 60px;
+}
+
+.mabarcontainer .name {
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px;
 }
 
 .giftcontainer {

@@ -10,108 +10,108 @@ const app = express();
 const httpServer = createServer(app);
 
 //SP google
-const fs = require('fs');
-const readline = require('readline');
-const { google } = require('googleapis');
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+// const fs = require('fs');
+// const readline = require('readline');
+// const { google } = require('googleapis');
+// const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
-function setList(img,user,team) {
-    fs.readFile('credentials.json', (err, content) => {
-        if (err) return console.log('Error loading client secret file:', err);
-        authorize(JSON.parse(content), writeData);
-      });
+// function setList(img,user,team) {
+//     fs.readFile('credentials.json', (err, content) => {
+//         if (err) return console.log('Error loading client secret file:', err);
+//         authorize(JSON.parse(content), writeData);
+//       });
 
-        const TOKEN_PATH = 'token.json';
-        function authorize(credentials, callback) {
-            const { client_secret, client_id, redirect_uris } = credentials.installed;
-            const oAuth2Client = new google.auth.OAuth2(
-                client_id, client_secret, redirect_uris[0]);
+//         const TOKEN_PATH = 'token.json';
+//         function authorize(credentials, callback) {
+//             const { client_secret, client_id, redirect_uris } = credentials.installed;
+//             const oAuth2Client = new google.auth.OAuth2(
+//                 client_id, client_secret, redirect_uris[0]);
 
-            // Check if we have previously stored a token.
-            fs.readFile(TOKEN_PATH, (err, token) => {
-                if (err) return getNewToken(oAuth2Client, callback);
-                oAuth2Client.setCredentials(JSON.parse(token));
-                callback(oAuth2Client);
-            });
-        }
+//             // Check if we have previously stored a token.
+//             fs.readFile(TOKEN_PATH, (err, token) => {
+//                 if (err) return getNewToken(oAuth2Client, callback);
+//                 oAuth2Client.setCredentials(JSON.parse(token));
+//                 callback(oAuth2Client);
+//             });
+//         }
 
-        function getNewToken(oAuth2Client, callback) {
-            const authUrl = oAuth2Client.generateAuthUrl({
-                access_type: 'offline',
-                scope: SCOPES,
-            });
-            console.log('Authorize this app by visiting this url:', authUrl);
-            const rl = readline.createInterface({
-                input: process.stdin,
-                output: process.stdout,
-            });
-            rl.question('Enter the code from that page here: ', (code) => {
-                rl.close();
-                oAuth2Client.getToken(code, (err, token) => {
-                    if (err) return console.error('Error while trying to retrieve access token', err);
-                    oAuth2Client.setCredentials(token);
-                    // Store the token to disk for later program executions
-                    fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-                        if (err) return console.error(err);
-                        console.log('Token stored to', TOKEN_PATH);
-                    });
-                    callback(oAuth2Client);
-                });
-            });
-        }
+//         function getNewToken(oAuth2Client, callback) {
+//             const authUrl = oAuth2Client.generateAuthUrl({
+//                 access_type: 'offline',
+//                 scope: SCOPES,
+//             });
+//             console.log('Authorize this app by visiting this url:', authUrl);
+//             const rl = readline.createInterface({
+//                 input: process.stdin,
+//                 output: process.stdout,
+//             });
+//             rl.question('Enter the code from that page here: ', (code) => {
+//                 rl.close();
+//                 oAuth2Client.getToken(code, (err, token) => {
+//                     if (err) return console.error('Error while trying to retrieve access token', err);
+//                     oAuth2Client.setCredentials(token);
+//                     // Store the token to disk for later program executions
+//                     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+//                         if (err) return console.error(err);
+//                         console.log('Token stored to', TOKEN_PATH);
+//                     });
+//                     callback(oAuth2Client);
+//                 });
+//             });
+//         }
 
-        //let img = `${data.profilePictureUrl}`;
-        function writeData(auth) {
-            const sheets = google.sheets({ version: 'v4', auth });
-            let date_ob = new Date();
+//         //let img = `${data.profilePictureUrl}`;
+//         function writeData(auth) {
+//             const sheets = google.sheets({ version: 'v4', auth });
+//             let date_ob = new Date();
 
-            // current date
-            // adjust 0 before single digit date
-            let date = ("0" + date_ob.getDate()).slice(-2);
+//             // current date
+//             // adjust 0 before single digit date
+//             let date = ("0" + date_ob.getDate()).slice(-2);
             
-            // current month
-            let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+//             // current month
+//             let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
             
-            // current year
-            let year = date_ob.getFullYear();
+//             // current year
+//             let year = date_ob.getFullYear();
             
-            // current hours
-            let hours = date_ob.getHours();
+//             // current hours
+//             let hours = date_ob.getHours();
             
-            // current minutes
-            let minutes = date_ob.getMinutes();
+//             // current minutes
+//             let minutes = date_ob.getMinutes();
             
-            // current seconds
-            let seconds = date_ob.getSeconds();
+//             // current seconds
+//             let seconds = date_ob.getSeconds();
             
-            let timeInMss = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
-            let values = [
-                [
-                    timeInMss,
-                    '=IMAGE("'+img+'",2)',
-                    user,
-                    team
-                ],
-            ];
-            const resource = {
-                values,
-            };
-            sheets.spreadsheets.values.append({
-                spreadsheetId: '1w16YGX_YF-qICfUhwUnB4iWi9hnvDQm4cwfLU8jOtSA',
-                range: 'Sheet1!A2',
-                insertDataOption: 'INSERT_ROWS',
-                valueInputOption: 'USER_ENTERED',  // Modified
-                resource: resource,
-            }, (err, result) => {
-                if (err) {
-                    // Handle error
-                    console.log(err);
-                } else {
-                    console.log('%d cells updated on range: %s', result.data.updates.updatedCells, result.data.updates.updatedRange);
-                }
-            });
-        }
-}
+//             let timeInMss = year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+//             let values = [
+//                 [
+//                     timeInMss,
+//                     '=IMAGE("'+img+'",2)',
+//                     user,
+//                     team
+//                 ],
+//             ];
+//             const resource = {
+//                 values,
+//             };
+//             sheets.spreadsheets.values.append({
+//                 spreadsheetId: '1w16YGX_YF-qICfUhwUnB4iWi9hnvDQm4cwfLU8jOtSA',
+//                 range: 'Sheet1!A2',
+//                 insertDataOption: 'INSERT_ROWS',
+//                 valueInputOption: 'USER_ENTERED',  // Modified
+//                 resource: resource,
+//             }, (err, result) => {
+//                 if (err) {
+//                     // Handle error
+//                     console.log(err);
+//                 } else {
+//                     console.log('%d cells updated on range: %s', result.data.updates.updatedCells, result.data.updates.updatedRange);
+//                 }
+//             });
+//         }
+// }
 
 // Enable cross origin resource sharing
 const io = new Server(httpServer, {
@@ -179,25 +179,24 @@ io.on('connection', (socket) => {
         tiktokConnectionWrapper.connection.on('envelope', msg => socket.emit('envelope', msg));
         tiktokConnectionWrapper.connection.on('subscribe', msg => socket.emit('subscribe', msg));
 
-        //create list
 
+        //create list google spreadsheet
+        // tiktokConnectionWrapper.connection.on('chat', data => {
+        //     let team;
+        //     let chat = `${data.comment}`;
 
-        tiktokConnectionWrapper.connection.on('chat', data => {
-            let team;
-            let chat = `${data.comment}`;
+        //     if (chat) {
+        //         team = chat.toLowerCase().split("!mabar/").pop();
+        //     }
 
-            if (chat) {
-                team = chat.toLowerCase().split("!mabar/").pop();
-            }
+        //     let img = `${data.profilePictureUrl}`;
+        //     let user = `${data.uniqueId}`;
 
-            let img = `${data.profilePictureUrl}`;
-            let user = `${data.uniqueId}`;
-
-            if (data.comment.toLowerCase().includes('!mabar/') ) {
-               setList(img,user,team)
+        //     if (data.comment.toLowerCase().includes('!mabar/') ) {
+        //        setList(img,user,team)
                
-            }
-        });
+        //     }
+        // });
 
     });
 
