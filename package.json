@@ -5,5 +5,11 @@
     "googleapis": "^127.0.0",
     "socket.io": "^4.4.1",
     "tiktok-live-connector": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write src/**/*.js",
+    "build": "babel src -d dist --copy-files && npx tsc",
+    "start": "node server.js"
   }
 }
