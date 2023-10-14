@@ -223,7 +223,7 @@ connection.on('chat', (msg) => {
     let team;
     let chat = `${msg.comment}`;
 
-    console.log(chat);
+    // console.log(chat);
 
     if (chat) {
         team = chat.toLowerCase().split("!mabar/").pop();
